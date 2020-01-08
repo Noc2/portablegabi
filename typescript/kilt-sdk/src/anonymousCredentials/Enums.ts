@@ -1,5 +1,6 @@
 enum GoHooks {
   genKeypair = 'genKeypair',
+  keyFromMnemonic = 'keyFromMnemonic',
   genKey = 'genKey',
   startAttestationSession = 'startAttestationSession',
   requestAttestation = 'requestAttestation',

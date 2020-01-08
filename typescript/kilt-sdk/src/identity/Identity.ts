@@ -35,7 +35,7 @@ import {
 } from '../crypto/Crypto'
 import PublicIdentity from './PublicIdentity'
 
-type BoxPublicKey =
+export type BoxPublicKey =
   | PublicIdentity['boxPublicKeyAsHex']
   | Identity['boxKeyPair']['publicKey']
 
@@ -144,7 +144,8 @@ export default class Identity extends PublicIdentity {
   public readonly seedAsHex: string
   public readonly signPublicKeyAsHex: string
 
-  private constructor(seed: Uint8Array, signKeyringPair: KeyringPair) {
+  // TODO: Change back to private
+  public constructor(seed: Uint8Array, signKeyringPair: KeyringPair) {
     // NB: use different secret keys for each key pair in order to avoid
     // compromising both key pairs at the same time if one key becomes public
     // Maybe use BIP32 and BIP44

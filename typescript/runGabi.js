@@ -8,22 +8,21 @@ const AcAttester_1 = tslib_1.__importDefault(require("./kilt-sdk/src/anonymousCr
 const AcVerifier_1 = tslib_1.__importDefault(require("./kilt-sdk/src/anonymousCredentials/AcVerifier"));
 // class IGabiIdentity extends Identity {}
 const runGabi = async () => {
-    const mnemonic = `scissors purse again yellow cabbage fat alpha come snack ripple jacket broken`;
-    const claimer = src_1.Identity.buildFromMnemonic(mnemonic);
-    console.log('Claimer \n', claimer);
+    const mnemonic = 'scissors purse again yellow cabbage fat alpha come snack ripple jacket broken';
     // load from test environment
     const { disclosedAttributes, ctype, claimRaw, privKey, pubKey } = TestEnv_1.default;
     // create claim
-    const claim = src_1.Claim.fromCTypeAndClaimContents(new src_1.CType(JSON.parse(ctype)), claimRaw, claimer.address);
     /**
      * GABI STUFF.
      * */
     console.time('>> Complete Gabi process <<');
     // build claimer identity
     // TODO: pull from master + add mnemonic
-    console.time('(1) Build claimer identity');
-    const acClaimer = await AcClaimer_1.default.buildFromMnemonic('test');
+    console.time('(1) Build claim + claimer identity');
+    const acClaimer = await AcClaimer_1.default.buildFromMnemonic(mnemonic);
+    const claim = src_1.Claim.fromCTypeAndClaimContents(new src_1.CType(JSON.parse(ctype)), claimRaw, acClaimer.address);
     console.timeEnd('(1) Build claimer identity');
+    console.log(await AcClaimer_1.default.buildFromMnemonic('opera initial unknown sign minimum sadness crane worth attract ginger category discover'));
     console.time('(2) Start attestation: attester sends 2 nonces to claimer');
     const acAttester = new AcAttester_1.default(pubKey, privKey);
     const attesterPubKey = acAttester.getPubKey();
@@ -36,7 +35,6 @@ const runGabi = async () => {
         attesterPubKey,
     });
     console.timeEnd('(3) Claimer requests attestation');
-    console.log(reqSignMsg, claimerSignSession);
     console.time('(4) Attester issues requested attestation');
     const aSignature = await acAttester.issueAttestation({
         attesterSignSession,
@@ -49,11 +47,9 @@ const runGabi = async () => {
         signature: aSignature,
     });
     console.timeEnd('(5) Claimer builds credential');
-    console.log(credential);
     console.time('(6) Start verification: verifier sends 2 nonces to claimer');
     const { session: verifierSession, message: reqRevealedAttrMsg, } = await AcVerifier_1.default.startVerificationSession({ disclosedAttributes });
     console.timeEnd('(6) Start verification: verifier sends 2 nonces to claimer');
-    console.log(claim.contents);
     console.time('(7) Slaimer reveals attributes');
     const proof = await acClaimer.revealAttributes({
         credential,

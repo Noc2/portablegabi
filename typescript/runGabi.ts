@@ -7,19 +7,13 @@ import AcVerifier from './kilt-sdk/src/anonymousCredentials/AcVerifier'
 // class IGabiIdentity extends Identity {}
 
 const runGabi = async (): Promise<void> => {
-  const mnemonic = `scissors purse again yellow cabbage fat alpha come snack ripple jacket broken`
-  const claimer: Identity = Identity.buildFromMnemonic(mnemonic)
-  console.log('Claimer \n', claimer)
+  const mnemonic =
+    'scissors purse again yellow cabbage fat alpha come snack ripple jacket broken'
 
   // load from test environment
   const { disclosedAttributes, ctype, claimRaw, privKey, pubKey } = testEnv
 
   // create claim
-  const claim = Claim.fromCTypeAndClaimContents(
-    new CType(JSON.parse(ctype)),
-    claimRaw,
-    claimer.address
-  )
 
   /**
    * GABI STUFF.
@@ -28,9 +22,19 @@ const runGabi = async (): Promise<void> => {
 
   // build claimer identity
   // TODO: pull from master + add mnemonic
-  console.time('(1) Build claimer identity')
-  const acClaimer = await AcClaimer.buildFromMnemonic('test')
+  console.time('(1) Build claim + claimer identity')
+  const acClaimer = await AcClaimer.buildFromMnemonic(mnemonic)
+  const claim = Claim.fromCTypeAndClaimContents(
+    new CType(JSON.parse(ctype)),
+    claimRaw,
+    acClaimer.address
+  )
   console.timeEnd('(1) Build claimer identity')
+  console.log(
+    await AcClaimer.buildFromMnemonic(
+      'opera initial unknown sign minimum sadness crane worth attract ginger category discover'
+    )
+  )
 
   console.time('(2) Start attestation: attester sends 2 nonces to claimer')
   const acAttester = new AcAttester(pubKey, privKey)
@@ -51,7 +55,6 @@ const runGabi = async (): Promise<void> => {
     attesterPubKey,
   })
   console.timeEnd('(3) Claimer requests attestation')
-  console.log(reqSignMsg, claimerSignSession)
 
   console.time('(4) Attester issues requested attestation')
   const aSignature = await acAttester.issueAttestation({
@@ -67,15 +70,12 @@ const runGabi = async (): Promise<void> => {
   })
   console.timeEnd('(5) Claimer builds credential')
 
-  console.log(credential)
-
   console.time('(6) Start verification: verifier sends 2 nonces to claimer')
   const {
     session: verifierSession,
     message: reqRevealedAttrMsg,
   } = await AcVerifier.startVerificationSession({ disclosedAttributes })
   console.timeEnd('(6) Start verification: verifier sends 2 nonces to claimer')
-  console.log(claim.contents)
 
   console.time('(7) Slaimer reveals attributes')
   const proof = await acClaimer.revealAttributes({

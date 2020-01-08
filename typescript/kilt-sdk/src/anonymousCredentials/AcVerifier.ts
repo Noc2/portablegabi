@@ -2,10 +2,10 @@ import PublicIdentity from '../identity/PublicIdentity'
 import goWasmExec from './wasm_exec_wrapper'
 import GoHooks from './Enums'
 import {
-  IGabiAttrMsg,
-  IGabiMessageSession,
-  IGabiVerifiedAtts,
-  IGabiVerifierSession,
+  IAcAttrMsg,
+  IAcMsgSession,
+  IAcVerifiedAtts,
+  IAcContextNonce,
 } from './Types'
 
 // TODO: Remove extends PublicIdentity?
@@ -16,10 +16,10 @@ export default class AcVerifier extends PublicIdentity {
     attesterPubKey,
   }: {
     proof: string
-    verifierSession: IGabiVerifierSession
+    verifierSession: IAcContextNonce
     attesterPubKey: string
-  }): Promise<IGabiVerifiedAtts> {
-    const reponse = await goWasmExec<IGabiVerifiedAtts>(
+  }): Promise<IAcVerifiedAtts> {
+    const reponse = await goWasmExec<IAcVerifiedAtts>(
       GoHooks.verifyAttributes,
       [proof, JSON.stringify(verifierSession), attesterPubKey]
     )
@@ -32,10 +32,10 @@ export default class AcVerifier extends PublicIdentity {
   }: {
     disclosedAttributes: string[]
   }): Promise<{
-    message: IGabiAttrMsg
-    session: IGabiVerifierSession
+    message: IAcAttrMsg
+    session: IAcContextNonce
   }> {
-    const { message, session } = await goWasmExec<IGabiMessageSession>(
+    const { message, session } = await goWasmExec<IAcMsgSession>(
       GoHooks.startVerificationSession,
       disclosedAttributes
     )

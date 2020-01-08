@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var GoHooks;
 (function (GoHooks) {
     GoHooks["genKeypair"] = "genKeypair";
+    GoHooks["keyFromMnemonic"] = "keyFromMnemonic";
     GoHooks["genKey"] = "genKey";
     GoHooks["startAttestationSession"] = "startAttestationSession";
     GoHooks["requestAttestation"] = "requestAttestation";

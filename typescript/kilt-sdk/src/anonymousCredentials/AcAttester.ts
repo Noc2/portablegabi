@@ -1,9 +1,9 @@
 import goWasmExec from './wasm_exec_wrapper'
 import GoHooks from './Enums'
 import {
-  IGabiAttestationRequest,
-  IGabiAttestationStart,
-  IGabiMessageSession,
+  IAcAttestationRequest,
+  IAcAttestationStart,
+  IAcMsgSession,
   IAcAttester,
 } from './Types'
 
@@ -17,7 +17,7 @@ export default class AcAttester implements IAcAttester {
     pubKey: string
   }> {
     const validityDuration = 365 * 24 * 60 * 60 * 1000 * 1000 * 1000 // 365 days in nanoseconds
-    return goWasmExec(GoHooks.genKeypair, [7, validityDuration]) // TODO: Why 7
+    return goWasmExec(GoHooks.genKeypair, [70, validityDuration]) // TODO: Why 7
   }
 
   // TODO: Talk to Timo about storage
@@ -37,14 +37,14 @@ export default class AcAttester implements IAcAttester {
   }
 
   // start attestation
-  public async startAttestation(): Promise<IGabiAttestationStart> {
+  public async startAttestation(): Promise<IAcAttestationStart> {
     const {
       message,
       session,
     }: {
       message: string
       session: string
-    } = await goWasmExec<IGabiMessageSession>(GoHooks.startAttestationSession, [
+    } = await goWasmExec<IAcMsgSession>(GoHooks.startAttestationSession, [
       this.privKey,
       this.pubKey,
     ])
@@ -56,8 +56,8 @@ export default class AcAttester implements IAcAttester {
     attesterSignSession,
     reqSignMsg,
   }: {
-    attesterSignSession: IGabiAttestationStart['session']
-    reqSignMsg: IGabiAttestationRequest['message']
+    attesterSignSession: IAcAttestationStart['session']
+    reqSignMsg: IAcAttestationRequest['message']
   }): Promise<string> {
     const response = await goWasmExec<string>(GoHooks.issueAttestation, [
       this.privKey,

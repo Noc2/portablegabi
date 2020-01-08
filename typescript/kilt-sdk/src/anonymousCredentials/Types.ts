@@ -1,44 +1,35 @@
-export interface IGabiClaimer {
-  MasterSecret: string
+export interface IAcContextNonce {
+  context: string
+  nonce: string
 }
 
-export interface IGabiMessageSession {
+export interface IAcMsgSession {
   message: string
   session: string
 }
-export interface IGabiAttestationStart {
-  message: {
-    nonce: string
-    context: string
-  }
-  session: { [key: string]: any }
+export interface IAcAttestationStart {
+  message: IAcContextNonce
+  session: any
 }
 
-export interface IGabiAttestationRequest {
-  message: { [key: string]: any }
+export interface IAcAttestationRequest {
+  message: any
   session: {
     claim: {
       cType: string
       contents: any
     }
-    [key: string]: any
+    [crypto: string]: any
   }
 }
 
-export interface IGabiAttrMsg {
+export interface IAcAttrMsg extends IAcContextNonce {
   disclosedAttributes: string[]
-  context: string
-  nonce: string
 }
 
-export interface IGabiVerifiedAtts {
+export interface IAcVerifiedAtts {
   verified: 'true' | 'false'
   claim: string
-}
-
-export interface IGabiVerifierSession {
-  context: string
-  nonce: string
 }
 
 export interface IAcClaimer {

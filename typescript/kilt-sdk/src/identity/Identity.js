@@ -30,6 +30,7 @@ const tweetnacl_1 = tslib_1.__importDefault(require("tweetnacl"));
 const crypto_1 = tslib_1.__importDefault(require("../crypto"));
 const PublicIdentity_1 = tslib_1.__importDefault(require("./PublicIdentity"));
 class Identity extends PublicIdentity_1.default {
+    // TODO: Change back to private
     constructor(seed, signKeyringPair) {
         // NB: use different secret keys for each key pair in order to avoid
         // compromising both key pairs at the same time if one key becomes public

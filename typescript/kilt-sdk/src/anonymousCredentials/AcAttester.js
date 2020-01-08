@@ -17,7 +17,7 @@ class AcAttester {
     // generate keypair
     static async genKeypair() {
         const validityDuration = 365 * 24 * 60 * 60 * 1000 * 1000 * 1000; // 365 days in nanoseconds
-        return wasm_exec_wrapper_1.default(Enums_1.default.genKeypair, [7, validityDuration]); // TODO: Why 7
+        return wasm_exec_wrapper_1.default(Enums_1.default.genKeypair, [70, validityDuration]); // TODO: Why 7
     }
     // TODO: Talk to Timo about storage
     static async buildFromScratch() {
