@@ -1,5 +1,5 @@
 import { Codec } from '@polkadot/types/types'
-import { SubmittableExtrinsic, AugmentedQuery } from '@polkadot/api/types'
+import { SubmittableExtrinsic } from '@polkadot/api/types'
 import { ApiPromise } from '@polkadot/api'
 import { KeyringPair } from '@polkadot/keyring/types'
 import Accumulator from '../attestation/Accumulator'
@@ -12,10 +12,7 @@ export type PgabiModName = 'portablegabi' | 'portablegabiPallet' | string
 export interface IPortablegabiApi<T extends PgabiModName> {
   query: {
     [K in T]: {
-      accumulatorList: AugmentedQuery<
-        'promise',
-        ([address, index]: [string, number]) => Promise<Codec>
-      >
+      accumulatorList: any
       accumulatorCount: (address: string) => Promise<Codec>
     }
   }
