@@ -1,3 +1,6 @@
+import toSeed from '@polkadot/util-crypto/mnemonic/toSeed'
+import { u8aToHex } from '@polkadot/util'
+import validate from '@polkadot/util-crypto/mnemonic/validate'
 import IClaimer, {
   AttestationRequest,
   ClaimerAttestationSession,
@@ -51,12 +54,25 @@ export default class Claimer implements IClaimer {
    */
   public static async buildFromMnemonic(
     mnemonic: string,
-    password = ''
+    password?: string
   ): Promise<Claimer> {
+    if (!validate(mnemonic)) {
+      throw new Error('Invalid mnemonic')
+    }
+    const seed = toSeed(mnemonic, password)
+    return this.buildFromSeed(seed)
+  }
+
+  /**
+   * Generates a claimer using the provided seed.
+   *
+   * @param seed The seed which is used to generate the key.
+   * @returns A new claimer.
+   */
+  public static async buildFromSeed(seed: Uint8Array): Promise<Claimer> {
     // secret's structure unmarshalled is { MasterSecret: string }
-    const secret = await goWasmExec<string>(WasmHooks.keyFromMnemonic, [
-      mnemonic,
-      password,
+    const secret = await goWasmExec<string>(WasmHooks.keyFromSeed, [
+      u8aToHex(seed),
     ])
     return new this(secret)
   }

@@ -62,19 +62,12 @@ describe('Test claimer creation', () => {
     expect(claimerWithPass).not.toStrictEqual(claimerWithoutPass)
   })
   it('Builds claimer from empty mnemonic seed', async () => {
-    const claimerWithoutPass = await Claimer.buildFromMnemonic('')
-    expect(claimerWithoutPass).toHaveProperty(
-      'secret',
-      '{"MasterSecret":"HdWjkfn17XNA/01FE6q5zORPlJel5+2F/YGIdrbrQC4="}'
+    await expect(Claimer.buildFromMnemonic('')).rejects.toThrow(
+      'Invalid mnemonic'
     )
-    expect(claimerWithoutPass).not.toStrictEqual(claimer)
-    const claimerWithPass = await Claimer.buildFromMnemonic('', 'password')
-    expect(claimerWithPass).toHaveProperty(
-      'secret',
-      '{"MasterSecret":"Ugc7cbbFMn0UzRGkxgahlb6GxLohyWp2/6G2L6GrCVo="}'
+    await expect(Claimer.buildFromMnemonic('', 'password')).rejects.toThrow(
+      'Invalid mnemonic'
     )
-    expect(claimerWithPass).not.toStrictEqual(claimer)
-    expect(claimerWithPass).not.toStrictEqual(claimerWithoutPass)
   })
   it('Builds claimer from non-empty mnemonic seed', async () => {
     const claimerWithoutPass = await Claimer.buildFromMnemonic(
@@ -82,7 +75,7 @@ describe('Test claimer creation', () => {
     )
     expect(claimerWithoutPass).toHaveProperty(
       'secret',
-      '{"MasterSecret":"ZaWdr/rKSi4/cZNZbsZlMtx71K1foTFbp/QUJXMsrbk="}'
+      '{"MasterSecret":"9o2iTwz6wx0FtPJ7BqQCVrF/vvVxX0GFr5kPBQ6R9XM="}'
     )
     expect(claimerWithoutPass).not.toStrictEqual(claimer)
     const claimerWithPass = await Claimer.buildFromMnemonic(
@@ -91,7 +84,7 @@ describe('Test claimer creation', () => {
     )
     expect(claimerWithPass).toHaveProperty(
       'secret',
-      '{"MasterSecret":"PvsekZdNUr2t+l4WW/m3jloFRBUlIHtBhdIueW19KlM="}'
+      '{"MasterSecret":"2VhYuA7pIoHpPFzzerBUULPDRjT2vqthdNIhlByFcgg="}'
     )
     expect(claimerWithPass).not.toStrictEqual(claimer)
     expect(claimerWithPass).not.toStrictEqual(claimerWithoutPass)
