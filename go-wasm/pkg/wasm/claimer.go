@@ -33,7 +33,7 @@ func KeyFromSeed(this js.Value, inputs []js.Value) (interface{}, error) {
 	}
 	seed, err := hex.DecodeString(hexString[2:])
 
-	claimer, err := credentials.NewClaimerFromBytes(SysParams, seed)
+	claimer, err := credentials.NewClaimerFromSecret(SysParams, seed)
 	if err != nil {
 		return nil, err
 	}
