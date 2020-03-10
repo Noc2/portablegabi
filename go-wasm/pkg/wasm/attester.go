@@ -5,6 +5,7 @@ package wasm
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"syscall/js"
 
 	"github.com/KILTprotocol/portablegabi/go-wasm/pkg/credentials"
@@ -44,10 +45,10 @@ func StartAttestationSession(this js.Value, inputs []js.Value) (interface{}, err
 		PublicKey:  &gabi.PublicKey{},
 	}
 	if err := json.Unmarshal([]byte(inputs[0].String()), attester.PrivateKey); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error in private key: %v", err)
 	}
 	if err := json.Unmarshal([]byte(inputs[1].String()), attester.PublicKey); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error in public key: %v", err)
 	}
 
 	session, msg, err := attester.InitiateAttestation()
@@ -77,10 +78,10 @@ func IssueAttestation(this js.Value, inputs []js.Value) (interface{}, error) {
 	request := &credentials.AttestedClaimRequest{}
 	update := &revocation.Update{}
 	if err := json.Unmarshal([]byte(inputs[0].String()), attester.PrivateKey); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error in private key: %v", err)
 	}
 	if err := json.Unmarshal([]byte(inputs[1].String()), attester.PublicKey); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error in public key: %v", err)
 	}
 	if err := json.Unmarshal([]byte(inputs[2].String()), session); err != nil {
 		return nil, err
@@ -135,16 +136,16 @@ func RevokeAttestation(this js.Value, inputs []js.Value) (interface{}, error) {
 	witnesses := []*revocation.Witness{}
 
 	if err := json.Unmarshal([]byte(inputs[0].String()), attester.PrivateKey); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error in private key: %v", err)
 	}
 	if err := json.Unmarshal([]byte(inputs[1].String()), attester.PublicKey); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error in public key: %v", err)
 	}
 	if err := json.Unmarshal([]byte(inputs[2].String()), update); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error in update key: %v", err)
 	}
 	if err := json.Unmarshal([]byte(inputs[3].String()), &witnesses); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Error in witness key: %v", err)
 	}
 	return attester.RevokeAttestation(update, witnesses)
 }
@@ -159,10 +160,10 @@ func GetAccumulatorIndex(this js.Value, inputs []js.Value) (interface{}, error) 
 	update := revocation.Update{}
 
 	if err := json.Unmarshal([]byte(inputs[0].String()), &pubKey); err != nil {
-		return 0, err
+		return 0, fmt.Errorf("Error in witness key: %v", err)
 	}
 	if err := json.Unmarshal([]byte(inputs[1].String()), &update); err != nil {
-		return 0, err
+		return 0, fmt.Errorf("Error in update key: %v", err)
 	}
 
 	revPubKey, err := pubKey.RevocationKey()
@@ -171,7 +172,7 @@ func GetAccumulatorIndex(this js.Value, inputs []js.Value) (interface{}, error) 
 	}
 	acc, err := update.Verify(revPubKey)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("Could not verify update: ", err)
 	}
 
 	return acc.Index, nil
@@ -187,10 +188,10 @@ func GetAccumulatorTimestamp(this js.Value, inputs []js.Value) (interface{}, err
 	update := revocation.Update{}
 
 	if err := json.Unmarshal([]byte(inputs[0].String()), &pubKey); err != nil {
-		return 0, err
+		return 0, fmt.Errorf("Error in public key: %v", err)
 	}
 	if err := json.Unmarshal([]byte(inputs[1].String()), &update); err != nil {
-		return 0, err
+		return 0, fmt.Errorf("Error in update key: %v", err)
 	}
 
 	revPubKey, err := pubKey.RevocationKey()
